@@ -1,0 +1,271 @@
+%\VignetteIndexEntry{Using the inSilicoMerging package} 
+%\VignetteDepends{inSilicoDb}
+
+\documentclass{article}
+
+\usepackage{url}
+\usepackage{pdflscape}
+
+\usepackage{color}
+\newcommand{\todo}[1]{\textcolor{red}{\textbf{#1}}}
+
+\begin{document}
+
+\title{Using the inSilicoMerging package}
+\author{Jonatan Taminau$\footnote{\texttt{jtaminau@vub.ac.be}}$}
+\date{CoMo, Vrije Universiteit Brussel, Pleinlaan 2, 1050 Brussels, Belgium}
+\maketitle
+
+\section{Merging Gene Expression Data}
+
+An increasing amount of gene expression datasets is available through public repositories like for example GEO \cite{GEO} and ArrayExpress \cite{ArrayExpress}. Combining such data from different studies  could be beneficial for the discovery of new biological insights and could increase the statistical power of gene expression analysis. However, the use of different experimentation plans, platforms and methodologies by different research groups introduces undesired batch effects in the gene expression values. This problem hinders and complicates further analysis and can even lead to incorrect conclusions \cite{Leek_2010}. Several methods to remove this bias but at the same time to preserve the biological variance inside the data are proposed in the last years. 
+The inSilicoMerging package combines several of the most used methods to remove this unwanted batch effects in order to actually merge different datasets. All methods are implemented in such way that they can be consistently used inside the Bioconductor framework.
+
+\section{Using the inSilicoMerging package}
+
+Using the inSilicoMerging package is straightforward since it mainly involves only a single function:
+
+\begin{verbatim}
+ > merge(esets, method="NONE");
+\end{verbatim}
+
+\noindent with \texttt{esets} a list of ExpressionSet objects and \texttt{method} one of the following options: \texttt{BMC}, \texttt{COMBAT}, \texttt{DWD}, \texttt{GENENORM}, \texttt{NONE} and \texttt{XPN}. Each of those methods is already extensively reported in literature but is nevertheless briefly explained in the following section.\\
+
+\noindent In order to visually inspect a merged dataset to have some direct feedback on its effect, three different visual validation methods are provided:
+
+\begin{verbatim}
+  > plotMDS(eset, ...)
+  > plotRLE(eset,...)
+  > plotGeneWiseBoxPlots(eset,...)
+\end{verbatim}
+
+\noindent \texttt{plotMDS} creates a \emph{double-labeled} Multidimensional Scaling (MDS) plot. In this plot, all samples can be labeled by color and by symbol. This might be useful since for each sample its biological phenotype of interest and the study it originates from can be visualized simultaneously, giving an indication of the effectiveness of the used merging method. \texttt{plotRLE} creates a relative log expression (RLE) plot, which was initially proposed to measure the overall quality of a dataset but can also be used in this context. Finally, \texttt{plotGeneWiseBoxPlots} provides a local visualization by looking at the gene-wise boxplots of samples. All three methods are illustrated in the examples section.
+
+\section{Different Merging Methods}
+
+Below we list, alphabetically, the merging techniques available through this package. Note that after using any of those methods the resulting merged dataset only contains the \textit{common} list of genes/probes between all studies.
+
+\subsubsection*{BMC}
+In \cite{BMC} they successfully applied a technique similar to z-score normalization for merging breast cancer datasets. They transformed the data by batch mean-centering, which means that the mean is subtracted:
+\begin{equation}
+\hat{x}_{ij}^k=x_{ij}^k-\overline{x}_{i}^k
+\end{equation}
+This technique was proposed to eliminate multiplicative bias. 
+
+\subsubsection*{COMBAT}
+Empirical Bayes \cite{COMBAT} is a method that estimates the parameters of a model for mean and variance for each gene and then adjusts the genes in each batch to meet the assumed model. The parameters are estimated by pooling information from multiple genes in each batch. It is assumed that measured gene expression values of gene $i$ in sample $j$ of batch $k$ can be expressed as:
+\begin{equation}
+x_{ij}^k = \alpha_i + \mathbf{C}\beta_i + \gamma_i^k+\delta_i^k\epsilon_{ij}^k
+\end{equation}
+where $\alpha_i$ is the overall gene expression, $\mathbf{C}$ is a design matrix for sample conditions, $\beta_i$ is the vector of regression coefficients corresponding to $\mathbf{X}$,  $\gamma_i^k$ and $\delta_i^k$ are the additive and multiplicative batch effects for gene $i$ in batch $k$ respectively and $\epsilon_{ij}^k$ are error terms.
+
+\subsubsection*{DWD}
+By searching for the separating hyperplane between data coming from different batches, Distance-weighted discrimination (DWD), an adaptation of Support Vector Machines (SVM), allows to remove bias by projecting the different batches on the hyperplane, calculating the batch mean $\overline{b}$ distance to the hyperplane and then subtracting the normal vector $\Delta$ of this plane multiplied by the mean \cite{DWD}.
+\begin{equation}
+\hat{x}_{ij}^k = x_{ij}^k - \overline{b}\Delta
+\end{equation}
+
+\subsubsection*{GENENORM}
+One of the simplest mathematical transformations to make datasets more comparable is z-score normalization. In this method, for each gene expression value $x_{ij}$ in each study separately all values are modified by subtracting the mean $\overline{x}_{i}$ of the gene in that dataset divided by its standard deviation $\sigma_i$:
+\begin{equation}
+\hat{x}_{ij}^k= \frac{x_{ij}^k-\overline{x}_{i}^k}{\sigma_{i.}^k}
+\end{equation}
+
+\subsubsection*{NONE}
+The most basic approach to combine two datasets is to simply \textit{paste} them together without any transformation. This can be used as a baseline against which other techniques can be compared.
+
+%\subsubsection*{RUV2}
+%In this more recent method \cite{RUV2} a factorization method is proposed which utilizes a set of control genes  to identify the factor corresponding with the batch bias. These genes are a-priori known to not be correlated with the biological factor under study.\\
+
+%\noindent By the default the list found in \cite{HKGENES} is used as control genes but since housekeeping genes cannot be assumed to be negative controls in every example \cite{RUV2} the user has the option to provide his own list of control genes:
+%\begin{verbatim}
+% my_list = c("GENE1", "GENE2");
+% > merge(esets, method="RUV2", genes=my_list);
+%\end{verbatim}
+
+%\subsubsection*{SAMPNORM}
+%Sample-wise normalization is similar to \texttt{GENENORM} but works by subtracting the mean $\mu_j$ of all gene measurements in a sample and dividing it by the standard deviation $\sigma_j$ within the sample:
+%\begin{equation}
+%\hat{x}_{ij}^k= \frac{x_{ij}^k-\overline{s}_{j}}{\sigma_{i.}^k}
+%\end{equation}
+
+\subsubsection*{XPN}
+The basic idea behind the cross-platform normalization \cite{XPN} approach is to identify homogeneous blocks (clusters) of gene and samples in both studies that have similar expression characteristics. In XPN, a gene measurement can be considered as a scaled and shifted block mean. For a platform $k$, gene $i$ and sample $j$, the recorded gene expression is given by:
+%The basic idea behind the cross-platform normalization \cite{XPN} approach is to find blocks (clusters) of gene-sample pairs in both studies that have similar expression characteristics. In \texttt{XPN}, a gene measurement can be considered as a scaled and shifted block mean. For a platform $k$, gene $i$ and sample $j$:
+\begin{equation}
+\label{eq:shaba}
+x_{ij}^k = A^k_{\alpha^*(i),\beta_k^*(j)} b_i^k + c^k_i + \sigma^k_i\epsilon^k_{ij}
+\end{equation}
+where $A^k_{\alpha^*,\beta^*}$ is a block mean and $b^k_{i}$ and $c^k_i$ represent gene and platform specific sensitivity and offset parameters respectively. The functions $\alpha^*()$ and $\beta^*()$ map a specific gene measurement in a sample to their corresponding multi-platform cluster. The noise variables $\epsilon^k_{ij}$ are assumed independent standard gaussians. \texttt{XPN} uses an iterative scheme to update the parameters in Equation \ref{eq:shaba} until convergence to a local minimum, giving:
+\begin{equation}
+\hat{x}_{ij}^k = \hat{A}^k_{\alpha^*(i),\beta_k^*(j)} \hat{b}_i^k + \hat{c}^k_i + \hat{\sigma}^k_i\hat{\epsilon}^k_{ij}
+\end{equation}
+More details can be found in \cite{XPN}.
+
+\subsection{Merging two-by-two}
+
+\noindent  Some merging technique are only reported and implemented to merge exactly two studies (e.g. \texttt{XPN} \cite{XPN} and \texttt{DWD} \cite{DWD}). In order to be able to merge any number of studies, this package added an additional step. This step combines all studies two-by-two and is called recursively on the intermediate results until only one, merged, dataset remains. Its behavior is illustrated in the following example:
+
+\begin{verbatim}
+list of studies = [ A ; B ; C ; D ; E ]
+m(X,Y) = applying merging technique 'm' on dataset 'X' and 'Y'
+combineByTwo:
+  iteration 1 : [ E ; m(A,B) ; m(C,D) ]   => [ E ; AB ; CD ]
+  iteration 2 : [ CD ; m(E,AB) ]          => [ CD ; EAB ]
+  iteration 3 : [ m(CD,EAB) ]             => [ CDEAB ]
+\end{verbatim}
+
+
+\section{Example}
+
+\noindent  For this example we retrieve two Lung Cancer datasets using the inSilicoDb package \cite{inSilicoDb}. Both datasets were assayed on a different platform (Affymetrix Human Genome U133A Array versus Affymetrix Human Genome U133 Plus 2.0 Array) and where preprocessed using fRMA \cite{fRMA}.
+
+<<example_1>>=
+library(inSilicoDb)
+eset1 = getDataset("GSE19804", "GPL570", norm="FRMA", genes=TRUE);
+eset2 = getDataset("GSE10072", "GPL96",  norm="FRMA", genes=TRUE);
+esets = list(eset1,eset2);
+@
+
+\noindent  Both studies contain normal and tumor samples and are already consistently annotated with a common \texttt{Disease} feature:
+
+<<example_2>>=
+table(pData(eset1)[,"Disease"]);
+table(pData(eset2)[,"Disease"]);
+@
+
+\noindent We now can simply merge both studies without applying any transformation:
+
+<<example_3>>=
+library(inSilicoMerging);
+eset_NONE = merge(esets, method="NONE");
+@
+
+\noindent  To further investigate the combined data we can use the \texttt{plotMDS} function to have a first visual inspection.
+
+<<example_4, fig=TRUE>>=
+plotMDS(eset_NONE, 
+        colLabel="Disease",
+        symLabel="Study",
+        main="NONE (No Transformation)");
+@
+
+\noindent From this plot we can immediately notice a very strong dataset-bias (probably due to the difference in platform) while we would expect that all control samples from both studies would cluster together. Let us try another method to see if we can solve this issue:
+
+<<example_5, fig=TRUE>>=
+eset_COMBAT = merge(esets, method="COMBAT");
+plotMDS(eset_COMBAT,
+        colLabel="Disease",
+        symLabel="Study",
+        main="COMBAT");
+@
+
+\noindent This clearly looks better. Both studies are mixed together and the biological phenotype of interest (tumor versus normal) is preserved in the merged dataset.\\ 
+
+\noindent In a similar way we can use the other visualization methods too. To illustrate the RLE plots we only select 25 (random) samples for clarity purposes. We can compare the merging without transformation (\texttt{NONE}) on the left and after using the \texttt{COMBAT} method on the right. In this plot we color the samples based on the study they originate from.
+
+<<example_6a, eval=FALSE>>=
+par(mfrow=c(1,2))
+select = sample(1:ncol(eset_NONE),25);
+plotRLE(eset_NONE[,select], colLabel="Study", legend=FALSE, main="NONE");
+plotRLE(eset_COMBAT[,select], colLabel="Study", legend=FALSE, main="COMBAT");
+@
+
+<<example_6b, results=tex, echo=FALSE>>=
+ofile = "example_9.pdf";
+pdf(file=ofile, paper="special", width=10, height=6);
+
+par(mfrow=c(1,2))
+select = sample(1:ncol(eset_NONE),25);
+plotRLE(eset_NONE[,select], colLabel="Study", legend=FALSE, main="NONE");
+plotRLE(eset_COMBAT[,select], colLabel="Study", legend=FALSE, main="COMBAT");
+
+for(i in 1:1) { dev.off(); }
+cat("\\begin{center}\\includegraphics[width=\\textwidth]{", ofile, "}\\end{center}\n\n", sep="");
+@
+
+\noindent  Finally, in the last visualization method the local effect of each method on the gene level can be illustrated with a gene-wise boxplot. We arbitrary select the \texttt{CA4} genes to investigate:
+
+<<example_7a, eval=FALSE>>=
+gene = "CA4";
+eset_BMC = merge(esets, method="BMC");
+eset_DWD = merge(esets, method="DWD");
+par(mfrow=c(2,2));
+plotGeneWiseBoxPlot(eset_NONE, colLabel="Disease", batchLabel="Study", 
+                    gene=gene, legend=TRUE, main="NONE");
+plotGeneWiseBoxPlot(eset_COMBAT, colLabel="Disease", batchLabel="Study", 
+                    gene=gene, legend=FALSE, main="COMBAT");
+plotGeneWiseBoxPlot(eset_BMC, colLabel="Disease", batchLabel="Study", 
+                    gene=gene, legend=FALSE, main="BMC");
+plotGeneWiseBoxPlot(eset_DWD, colLabel="Disease", batchLabel="Study", 
+                    gene=gene, legend=FALSE, main="DWD");
+@
+
+<<example_7b, results=tex, echo=FALSE>>=
+ofile = "example_10.pdf";
+pdf(file=ofile, paper="special", width=8, height=6);
+
+gene = "CA4";
+eset_BMC = merge(esets, method="BMC");
+eset_DWD = merge(esets, method="DWD");
+par(mfrow=c(2,2));
+plotGeneWiseBoxPlot(eset_NONE, colLabel="Disease", batchLabel="Study", 
+                                          gene=gene, legend=TRUE, main="NONE");
+plotGeneWiseBoxPlot(eset_COMBAT, colLabel="Disease", batchLabel="Study", 
+                                          gene=gene, legend=FALSE, main="COMBAT");
+plotGeneWiseBoxPlot(eset_BMC, colLabel="Disease", batchLabel="Study", 
+                                           gene=gene, legend=FALSE, main="BMC");
+plotGeneWiseBoxPlot(eset_DWD, colLabel="Disease", batchLabel="Study", 
+                                          gene=gene, legend=FALSE, main="DWD");
+
+for(i in 1:1) { dev.off(); }
+cat("\\begin{center}\\includegraphics[width=\\textwidth]{", ofile, "}\\end{center}\n\n", sep="");
+@
+
+\noindent In contrast to the two previous methods which illustrated the global bias between the two datasets we have a very local view this time. This gene is clearly differentially expressed (ok, maybe it was not that arbitrary after all :-) ) in both studies and without transformation the dataset-bias is not problematic. All merging methods take this into account and only small modification are performed.\\ 
+
+\noindent For other genes this situation can vary, for example for a relatively stable gene:
+
+<<example_8a, eval=FALSE>>=
+gene = "RPL37A";
+par(mfrow=c(2,2));
+plotGeneWiseBoxPlot(eset_NONE, colLabel="Disease", batchLabel="Study", 
+                    gene=gene, legend=TRUE, main="NONE");
+plotGeneWiseBoxPlot(eset_COMBAT, colLabel="Disease", batchLabel="Study", 
+                    gene=gene, legend=FALSE, main="COMBAT");
+plotGeneWiseBoxPlot(eset_BMC, colLabel="Disease", batchLabel="Study", 
+                    gene=gene, legend=FALSE, main="BMC");
+plotGeneWiseBoxPlot(eset_DWD, colLabel="Disease", batchLabel="Study", 
+                    gene=gene, legend=FALSE, main="DWD");
+@
+
+<<example_8b, results=tex, echo=FALSE>>=
+ofile = "example_11.pdf";
+pdf(file=ofile, paper="special", width=8, height=6);
+
+gene = "RPL37A";
+par(mfrow=c(2,2));
+plotGeneWiseBoxPlot(eset_NONE, colLabel="Disease", batchLabel="Study", 
+                                          gene=gene, legend=TRUE, main="NONE");
+plotGeneWiseBoxPlot(eset_COMBAT, colLabel="Disease", batchLabel="Study", 
+                                          gene=gene, legend=FALSE, main="COMBAT");
+plotGeneWiseBoxPlot(eset_BMC, colLabel="Disease", batchLabel="Study", 
+                                           gene=gene, legend=FALSE, main="BMC");
+plotGeneWiseBoxPlot(eset_DWD, colLabel="Disease", batchLabel="Study", 
+                                          gene=gene, legend=FALSE, main="DWD");
+
+for(i in 1:1) { dev.off(); }
+cat("\\begin{center}\\includegraphics[width=\\textwidth]{", ofile, "}\\end{center}\n\n", sep="");
+@
+
+As this example illustrates, it is now straightforward to merge a number of gene expression studies by applying different existing methods. A number of simple visualization tools are provided for a first inspection of the merged dataset(s).
+
+\section{Session Info}
+<<>>=
+sessionInfo()
+@
+
+\bibliographystyle{plain}
+\bibliography{inSilicoMerging}
+
+\end{document}
