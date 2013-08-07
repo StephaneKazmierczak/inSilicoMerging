@@ -6,7 +6,7 @@ dwd = function(eset1, eset2)
   eset = mergeNONE(list(eset1, eset2));
   batchInfo = c(rep(1,ncol(eset1)),
                 rep(2,ncol(eset2)));
-  res = kdwd(x=t(exprs(eset)), y=batchInfo, scaled=FALSE);
+  res = kdwd(x=t(exprs(eset)), y=as.factor(batchInfo), scaled=FALSE);
 	
   w = res@w[[1]]
 
