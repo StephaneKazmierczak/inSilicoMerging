@@ -1,5 +1,5 @@
 Package: inSilicoMerging
-Version: 1.7.0
+Version: 1.7.1
 Date: 2013-03-13
 Title: Collection of Merging Techniques for Gene Expression Data
 Description: Collection of techniques to remove inter-study bias when combining gene expression data originating from different studies.
