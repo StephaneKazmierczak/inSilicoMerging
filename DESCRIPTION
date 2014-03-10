@@ -1,15 +1,17 @@
 Package: inSilicoMerging
-Version: 1.7.1
+Version: 1.7.2
 Date: 2013-03-13
 Title: Collection of Merging Techniques for Gene Expression Data
 Description: Collection of techniques to remove inter-study bias when combining gene expression data originating from different studies.
 Author: Jonatan Taminau <jtaminau@vub.ac.be>
-Maintainer: Jonatan Taminau <jtaminau@vub.ac.be>, Stijn Meganck <smeganck@vub.ac.be>
+Maintainer: Quentin De Clerck <qdeclerc@vub.ac.be>, David Steenhoff <davidsteenhoff@insilicodb.org>
 Depends: R (>= 2.11.1), Biobase, DWD
 Suggests: BiocGenerics, inSilicoDb
-Collate: util.R dwd.R xpn.R merge.R mergeBMC.R mergeGENENORM.R mergeCOMBAT.R mergeNONE.R mergeXPN.R mergeDWD.R color.R
-              plotMDS.R plotRLE.R plotGeneWiseBoxPlot.R test_inSilicoMerging_package.R
+Collate: util.R dwd.R xpn.R merge.R mergeBMC.R mergeGENENORM.R
+        mergeCOMBAT.R mergeNONE.R mergeXPN.R mergeDWD.R color.R
+        plotMDS.R plotRLE.R plotGeneWiseBoxPlot.R
+        test_inSilicoMerging_package.R
 biocViews: Microarray
 License: GPL-2
 URL: http://insilico.ulb.ac.be/insilico-project/
-Packaged: 2012-03-15 16:55:59 UTC; pshannon
+Packaged: 2013-11-02 05:17:31 UTC; biocbuild

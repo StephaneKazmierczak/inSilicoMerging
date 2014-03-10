@@ -4,12 +4,14 @@
 \description{General method to merge different ExpressionSets by applying different techniques to remove inter-study bias.}
 
 \usage{
-merge(esets, method="NONE");
+merge(esets, method=NULL, norm="FRMA");
 }
 
 \arguments{
 \item{esets}{List of ExpressionSet objects.}
 \item{method}{Merging method aimed at removing inter-study bias. Possible options are: BMC, COMBAT, DWD, GENENORM, NONE and XPN. More information about each method is given below in the details.}
+\item{norm}{The norm argument is of importance when no eset is given but a list of information about the datasets required for the merging. Type of normalization to use when pre-processing a dataset. 
+  			Possible normalizations: "ORIGINAL", "FRMA", "SCAN" and "UPC".}
 }
 
 \value{
@@ -35,13 +37,13 @@ Note that after using any of those methods the resulting merged dataset only con
 
 # retrieve two datasets:
 library(inSilicoDb);
-eset1 = getDataset("GSE19804", "GPL570", norm="FRMA", genes=TRUE);
-eset2 = getDataset("GSE10072", "GPL96",  norm="FRMA", genes=TRUE);
+eset1 = getDataset("GSE19804", "GPL570", norm="FRMA", features="gene");
+eset2 = getDataset("GSE10072", "GPL96",  norm="FRMA", features="gene");
 esets = list(eset1,eset2);
 
 # merge them using different methods:
 library(inSilicoMerging);
-eset_NONE = merge(esets, method="NONE");
+eset_FRMA = merge(esets);
 eset_BMC = merge(esets, method="BMC");
 
 }

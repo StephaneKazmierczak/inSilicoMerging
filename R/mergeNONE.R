@@ -9,8 +9,8 @@ mergeNONE = function(esets)
   for(i in 2:length(esets))
   {
     eset2 = esets[[i]];
-    d1 = exprs(eset1)
-  	d2 = exprs(eset2)
+    d1 = exprs(eset1);
+  	d2 = exprs(eset2);
 
     #-----------------------------------------------------
     # Rebuild fData
@@ -61,8 +61,13 @@ mergeNONE = function(esets)
     # Rebuild rest eset
     #-----------------------------------------------------
 	
-    eset1 = new("ExpressionSet");
-    exprs(eset1) = cbind(d1[cg,], d2[cg,]);
+    # prevent to loose the column name in case there is only 1 sample in one exprs
+    d1 = d1[cg, 1:ncol(d1), drop = FALSE];
+    d2 = d2[cg, 1:ncol(d2), drop = FALSE];
+    
+    
+    eset1 = new("ExpressionSet");    
+    exprs(eset1) = cbind(d1, d2);
     pData(eset1) = pData;
     fData(eset1) = fData;
 
@@ -70,6 +75,11 @@ mergeNONE = function(esets)
 
   }
   
+  #make sure the measurements matches
+  measNames = sort(colnames(exprs(eset1)));  
+  exprs(eset1) = exprs(eset1)[, measNames];
+  pData(eset1) = pData(eset1)[measNames,];
+
   annotation(eset1) = unique(annot1);
   return(eset1);
 }

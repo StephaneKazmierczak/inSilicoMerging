@@ -20,22 +20,22 @@ plotMDS(eset, colLabel, symLabel, legend=TRUE, file=NULL, ...)
 
 # retrieve two datasets:
 library(inSilicoDb);
-eset1 = getDataset("GSE19804", "GPL570", norm="FRMA", genes=TRUE);
-eset2 = getDataset("GSE10072", "GPL96",  norm="FRMA", genes=TRUE);
+eset1 = getDataset("GSE19804", "GPL570", norm="FRMA", features="gene");
+eset2 = getDataset("GSE10072", "GPL96",  norm="FRMA", features="gene");
 esets = list(eset1,eset2);
 
-# merge them using the 'NONE' and 'COMBAT' method:
+# merge them using no additional merging technique and the 'COMBAT' method:
 library(inSilicoMerging)
-eset_NONE = merge(esets, method="NONE");
+eset_FRMA = merge(esets);
 eset_COMBAT = merge(esets, method="COMBAT");
 
 # check available annotations:
-colnames(pData(eset_NONE))
-table(pData(eset_NONE)[,"Disease"]);
-table(pData(eset_NONE)[,"Study"]);
+colnames(pData(eset_FRMA))
+table(pData(eset_FRMA)[,"Disease"]);
+table(pData(eset_FRMA)[,"Study"]);
 
 # Visual inspection of the two merged datasets through an MDS plot
-plotMDS(eset_NONE, colLabel="Disease", symLabel="Study")
+plotMDS(eset_FRMA, colLabel="Disease", symLabel="Study")
 plotMDS(eset_COMBAT, colLabel="Disease", symLabel="Study")
 
 }

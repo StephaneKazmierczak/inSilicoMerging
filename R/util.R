@@ -1,3 +1,5 @@
+library(inSilicoDb);
+
 #-------------------------------------------------------------------------------
 pp  = function(...) { paste(...,sep=""); }
 err = function(...) { stop(...,call.=FALSE); }
@@ -5,8 +7,7 @@ msg = function(...) { message(paste("  INSILICOMERGING:",...)); }
 war = function(...) { msg(" ! WARNING ! ",...); }
 
 #-------------------------------------------------------------------------------
-MERGING_METHODS = c("BMC", "COMBAT", "DWD", "GENENORM", "NONE", "RUV2", 
-                    "SAMPNORM", "XPN");
+MERGING_METHODS = c("BMC", "COMBAT", "DWD", "GENENORM", "UPC", "XPN");
 
 #-------------------------------------------------------------------------------
 isOdd = function(x) { as.logical(x%%2) };
@@ -51,5 +52,30 @@ identify_common_genes = function(lst)
   }
   return(temp);
 }
+
+#-------------------------------------------------------------------------------
+
+formatData = function(lst, normalization) {
+  feat = "gene";
+  lst = lapply(lst, function(el)     
+      if(is.list(el)) {
+        #check if it is a list
+        if ("curation" %in% names(el)) {   
+          getDataset(el[["dataset"]], el[["platform"]], features = feat, norm = normalization, curation = el[["curation"]] );
+        } else {
+          getDataset(el[["dataset"]], el[["platform"]], features = feat, norm = normalization);
+        }
+      #} else if (is.character(el)) {      
+      #  should be a string identifying a measurement
+      #  getMeasurement(el, features = feat, norm = normalization);
+      } else { 
+        # it should be an expression set
+        el;
+      });
+}
+
+#--------------------------------------------------------------------------------
+
+
 
 

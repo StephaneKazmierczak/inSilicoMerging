@@ -26,10 +26,11 @@ The inSilicoMerging package combines several of the most used methods to remove 
 Using the inSilicoMerging package is straightforward since it mainly involves only a single function:
 
 \begin{verbatim}
- > merge(esets, method="NONE");
+ > merge(esets);
 \end{verbatim}
 
-\noindent with \texttt{esets} a list of ExpressionSet objects and \texttt{method} one of the following options: \texttt{BMC}, \texttt{COMBAT}, \texttt{DWD}, \texttt{GENENORM}, \texttt{NONE} and \texttt{XPN}. Each of those methods is already extensively reported in literature but is nevertheless briefly explained in the following section.\\
+\noindent with \texttt{esets} a list of ExpressionSet objects and
+\texttt{method} one of the following options: \texttt{BMC}, \texttt{COMBAT}, \texttt{DWD}, \texttt{GENENORM} and \texttt{XPN}. Each of those methods is already extensively reported in literature but is nevertheless briefly explained in the following section.\\
 
 \noindent In order to visually inspect a merged dataset to have some direct feedback on its effect, three different visual validation methods are provided:
 
@@ -71,7 +72,7 @@ One of the simplest mathematical transformations to make datasets more comparabl
 \hat{x}_{ij}^k= \frac{x_{ij}^k-\overline{x}_{i}^k}{\sigma_{i.}^k}
 \end{equation}
 
-\subsubsection*{NONE}
+\subsubsection*{No additional transformation}
 The most basic approach to combine two datasets is to simply \textit{paste} them together without any transformation. This can be used as a baseline against which other techniques can be compared.
 
 %\subsubsection*{RUV2}
@@ -122,8 +123,8 @@ combineByTwo:
 
 <<example_1>>=
 library(inSilicoDb)
-eset1 = getDataset("GSE19804", "GPL570", norm="FRMA", genes=TRUE);
-eset2 = getDataset("GSE10072", "GPL96",  norm="FRMA", genes=TRUE);
+eset1 = getDataset("GSE19804", "GPL570", norm="FRMA", features = "gene");
+eset2 = getDataset("GSE10072", "GPL96",  norm="FRMA", features = "gene");
 esets = list(eset1,eset2);
 @
 
@@ -138,16 +139,16 @@ table(pData(eset2)[,"Disease"]);
 
 <<example_3>>=
 library(inSilicoMerging);
-eset_NONE = merge(esets, method="NONE");
+eset_FRMA = merge(esets);
 @
 
 \noindent  To further investigate the combined data we can use the \texttt{plotMDS} function to have a first visual inspection.
 
 <<example_4, fig=TRUE>>=
-plotMDS(eset_NONE, 
+plotMDS(eset_FRMA, 
         colLabel="Disease",
         symLabel="Study",
-        main="NONE (No Transformation)");
+        main="FRMA (No Transformation)");
 @
 
 \noindent From this plot we can immediately notice a very strong dataset-bias (probably due to the difference in platform) while we would expect that all control samples from both studies would cluster together. Let us try another method to see if we can solve this issue:
@@ -162,12 +163,12 @@ plotMDS(eset_COMBAT,
 
 \noindent This clearly looks better. Both studies are mixed together and the biological phenotype of interest (tumor versus normal) is preserved in the merged dataset.\\ 
 
-\noindent In a similar way we can use the other visualization methods too. To illustrate the RLE plots we only select 25 (random) samples for clarity purposes. We can compare the merging without transformation (\texttt{NONE}) on the left and after using the \texttt{COMBAT} method on the right. In this plot we color the samples based on the study they originate from.
+\noindent In a similar way we can use the other visualization methods too. To illustrate the RLE plots we only select 25 (random) samples for clarity purposes. We can compare the merging without transformation on the left and after using the \texttt{COMBAT} method on the right. In this plot we color the samples based on the study they originate from.
 
 <<example_6a, eval=FALSE>>=
 par(mfrow=c(1,2))
-select = sample(1:ncol(eset_NONE),25);
-plotRLE(eset_NONE[,select], colLabel="Study", legend=FALSE, main="NONE");
+select = sample(1:ncol(eset_FRMA),25);
+plotRLE(eset_FRMA[,select], colLabel="Study", legend=FALSE, main="FRMA");
 plotRLE(eset_COMBAT[,select], colLabel="Study", legend=FALSE, main="COMBAT");
 @
 
@@ -176,8 +177,8 @@ ofile = "example_9.pdf";
 pdf(file=ofile, paper="special", width=10, height=6);
 
 par(mfrow=c(1,2))
-select = sample(1:ncol(eset_NONE),25);
-plotRLE(eset_NONE[,select], colLabel="Study", legend=FALSE, main="NONE");
+select = sample(1:ncol(eset_FRMA),25);
+plotRLE(eset_FRMA[,select], colLabel="Study", legend=FALSE, main="FRMA");
 plotRLE(eset_COMBAT[,select], colLabel="Study", legend=FALSE, main="COMBAT");
 
 for(i in 1:1) { dev.off(); }
@@ -191,8 +192,8 @@ gene = "CA4";
 eset_BMC = merge(esets, method="BMC");
 eset_DWD = merge(esets, method="DWD");
 par(mfrow=c(2,2));
-plotGeneWiseBoxPlot(eset_NONE, colLabel="Disease", batchLabel="Study", 
-                    gene=gene, legend=TRUE, main="NONE");
+plotGeneWiseBoxPlot(eset_FRMA, colLabel="Disease", batchLabel="Study", 
+                    gene=gene, legend=TRUE, main="FRMA");
 plotGeneWiseBoxPlot(eset_COMBAT, colLabel="Disease", batchLabel="Study", 
                     gene=gene, legend=FALSE, main="COMBAT");
 plotGeneWiseBoxPlot(eset_BMC, colLabel="Disease", batchLabel="Study", 
@@ -209,8 +210,8 @@ gene = "CA4";
 eset_BMC = merge(esets, method="BMC");
 eset_DWD = merge(esets, method="DWD");
 par(mfrow=c(2,2));
-plotGeneWiseBoxPlot(eset_NONE, colLabel="Disease", batchLabel="Study", 
-                                          gene=gene, legend=TRUE, main="NONE");
+plotGeneWiseBoxPlot(eset_FRMA, colLabel="Disease", batchLabel="Study", 
+                                          gene=gene, legend=TRUE, main="FRMA");
 plotGeneWiseBoxPlot(eset_COMBAT, colLabel="Disease", batchLabel="Study", 
                                           gene=gene, legend=FALSE, main="COMBAT");
 plotGeneWiseBoxPlot(eset_BMC, colLabel="Disease", batchLabel="Study", 
@@ -229,8 +230,8 @@ cat("\\begin{center}\\includegraphics[width=\\textwidth]{", ofile, "}\\end{cente
 <<example_8a, eval=FALSE>>=
 gene = "RPL37A";
 par(mfrow=c(2,2));
-plotGeneWiseBoxPlot(eset_NONE, colLabel="Disease", batchLabel="Study", 
-                    gene=gene, legend=TRUE, main="NONE");
+plotGeneWiseBoxPlot(eset_FRMA, colLabel="Disease", batchLabel="Study", 
+                    gene=gene, legend=TRUE, main="FRMA");
 plotGeneWiseBoxPlot(eset_COMBAT, colLabel="Disease", batchLabel="Study", 
                     gene=gene, legend=FALSE, main="COMBAT");
 plotGeneWiseBoxPlot(eset_BMC, colLabel="Disease", batchLabel="Study", 
@@ -245,8 +246,8 @@ pdf(file=ofile, paper="special", width=8, height=6);
 
 gene = "RPL37A";
 par(mfrow=c(2,2));
-plotGeneWiseBoxPlot(eset_NONE, colLabel="Disease", batchLabel="Study", 
-                                          gene=gene, legend=TRUE, main="NONE");
+plotGeneWiseBoxPlot(eset_FRMA, colLabel="Disease", batchLabel="Study", 
+                                          gene=gene, legend=TRUE, main="FRMA");
 plotGeneWiseBoxPlot(eset_COMBAT, colLabel="Disease", batchLabel="Study", 
                                           gene=gene, legend=FALSE, main="COMBAT");
 plotGeneWiseBoxPlot(eset_BMC, colLabel="Disease", batchLabel="Study", 
