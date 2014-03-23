@@ -1,5 +1,5 @@
 #-------------------------------------------------------------------------------
-merge = function(esets, method=NULL, norm = "FRMA")
+merge = function(esets, method=NULL, norm = "FRMA", features = "GENE")
 {
   
   if( !is.null(method) && !is.element(method, MERGING_METHODS))
@@ -7,13 +7,11 @@ merge = function(esets, method=NULL, norm = "FRMA")
     err("Merging Method: ",method," is not supported.");
   }
   
-  if( is.null(method) && (norm == "FRMA" || norm == "UPC" || norm == "SCAN")) {
+  esets = formatData(esets, norm, features);
+  if( is.null(method)) {
     msg("Run with no additional merging technique...");
-    esets = formatData(esets, method);
     return(mergeNONE(esets));
   }
-  
-  esets = formatData(esets, norm);
   #if(method=="NONE")	 { msg("Run NONE..."); 	   return(mergeNONE(esets));	 }
   if(method=="BMC")      { msg("Run BMC...");      return(mergeBMC(esets));      }
   if(method=="COMBAT")   { msg("Run COMBAT...");   return(mergeCOMBAT(esets));   }

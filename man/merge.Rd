@@ -4,14 +4,19 @@
 \description{General method to merge different ExpressionSets by applying different techniques to remove inter-study bias.}
 
 \usage{
-merge(esets, method=NULL, norm="FRMA");
+
+merge(esets, method=NULL, norm="FRMA", features = "GENE");
+
 }
 
 \arguments{
-\item{esets}{List of ExpressionSet objects.}
-\item{method}{Merging method aimed at removing inter-study bias. Possible options are: BMC, COMBAT, DWD, GENENORM, NONE and XPN. More information about each method is given below in the details.}
+\item{esets}{List of ExpressionSet objects or list of datasets information. The accepted parameters for the list of information are: dataset, platform and curation.}
+\item{method}{Merging method aimed at removing inter-study bias. Possible options are: BMC, COMBAT, DWD, GENENORM and XPN. If none are specified, the merging  More information about each method is given below in the details.}
 \item{norm}{The norm argument is of importance when no eset is given but a list of information about the datasets required for the merging. Type of normalization to use when pre-processing a dataset. 
   			Possible normalizations: "ORIGINAL", "FRMA", "SCAN" and "UPC".}
+\item{features}{Type of features in which data is represented. This argument is only useful when giving a list of information about the datasets.
+	Two possible values: "GENE" or "PROBE". By default expression matrices containing genes are used in the merging.}
+ 
 }
 
 \value{
@@ -26,7 +31,7 @@ Currently the following different merging techniques are provided:
   \item{'COMBAT':}{Empirical Bayes [2] (also called EJLR or COMBAT) is a method that estimates the parameters of a model for mean and variance for each gene and then adjusts the genes in each batch to meet the assumed model. The parameters are estimated by pooling information from multiple genes in each batch.}
   \item{'DWD':}{In [3] they propose to use Distance Weighted Discrimination to find the hyperplane that separates the expression values of two studies. Assuming that the variation due to studies originating from different labs is bigger than any biological variation present in the data a translation in the direction of the normal vector of the hyperplane is used to remove bias.}
   \item{'GENENORM':}{One of the simplest mathematical transformations to make datasets more comparable is z-score normalization. In this method, for each gene expression value in each study separately all values are altered by subtracting the mean of the gene in that dataset divided by its standard deviation.}
-  \item{'NONE':}{Combine esets without any additional transformation. Similar to 'combine' function.}
+  \item{NULL:}{Combine esets without any additional transformation. Similar to 'combine' function.}
   \item{'XPN':}{The basic idea behind the cross-platform normalization [4] approach is to find blocks (clusters) of genes and samples in both studies that have similar expression characteristics. In XPN, a gene measurement can be considered as a scaled and shifted block mean.}
 }
 
@@ -37,14 +42,25 @@ Note that after using any of those methods the resulting merged dataset only con
 
 # retrieve two datasets:
 library(inSilicoDb);
-eset1 = getDataset("GSE19804", "GPL570", norm="FRMA", features="gene");
-eset2 = getDataset("GSE10072", "GPL96",  norm="FRMA", features="gene");
+eset1 = getDataset("GSE19804", "GPL570", norm="FRMA", features="GENE");
+eset2 = getDataset("GSE10072", "GPL96",  norm="FRMA", features="GENE");
 esets = list(eset1,eset2);
 
 # merge them using different methods:
 library(inSilicoMerging);
 eset_FRMA = merge(esets);
 eset_BMC = merge(esets, method="BMC");
+
+# It is also possible to specify a list
+# The three parameters are dataset, platform and curation
+
+datasetInfo1 = list(dataset = "GSE19804", platform = "GPL570");
+datasetInfo2 = list(dataset = "GSE10072", platform = "GPL96", curation = 17469);
+
+datasetsInfo = list(datasetInfo1, datasetInfo2);
+
+eset_FRMA = merge(datasetsInfo, norm = "FRMA");
+eset_BMC = merge(datasetsInfo, method="BMC", norm = "FRMA", features = "GENE");
 
 }
 

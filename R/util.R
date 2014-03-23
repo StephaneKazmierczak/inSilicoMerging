@@ -55,8 +55,7 @@ identify_common_genes = function(lst)
 
 #-------------------------------------------------------------------------------
 
-formatData = function(lst, normalization) {
-  feat = "gene";
+formatData = function(lst, normalization, feat) {
   lst = lapply(lst, function(el)     
       if(is.list(el)) {
         #check if it is a list
