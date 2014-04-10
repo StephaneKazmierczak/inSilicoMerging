@@ -3,11 +3,11 @@ CHANGES IN VERSION 1.8.0
 
 NEW FEATURES
 
-    o Possibility to use named lists instead of eSets, check at the merge documentation for an example
+    o Possibility to use named lists instead of eSets, check the merge-method documentation for an example
 
 BUG FIXES
 
-	o The plot functions did not behave correctly when the order of measurements were different in phenoData and exprs
+	o Measurements are now always sorted in the same order in phenoData and exprs
 
 OTHER
 
