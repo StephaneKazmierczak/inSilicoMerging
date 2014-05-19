@@ -8,7 +8,7 @@ merge = function(esets, method=NULL, norm = "FRMA", features = "GENE")
   }
   
   esets = formatData(esets, norm, features);
-  if( is.null(method)) {
+  if(is.null(method)) {
     msg("Run with no additional merging technique...");
     return(mergeNONE(esets));
   }
