@@ -12,3 +12,10 @@ BUG FIXES
 OTHER
 
     o Previous "NONE" method only available when not specifying a batch effect removal method or by specifying NULL.
+    
+CHANGES IN VERSION 1.8.0
+-------------------------
+
+REMOVED FEATURES
+	
+	o Removed the possibility to use named lists instead of eSets.

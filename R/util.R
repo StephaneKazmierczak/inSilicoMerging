@@ -7,7 +7,7 @@ msg = function(...) { message(paste("  INSILICOMERGING:",...)); }
 war = function(...) { msg(" ! WARNING ! ",...); }
 
 #-------------------------------------------------------------------------------
-MERGING_METHODS = c("BMC", "COMBAT", "DWD", "GENENORM", "UPC", "XPN");
+MERGING_METHODS = c("BMC", "COMBAT", "DWD", "GENENORM", "XPN");
 
 #-------------------------------------------------------------------------------
 isOdd = function(x) { as.logical(x%%2) };
@@ -54,27 +54,4 @@ identify_common_genes = function(lst)
 }
 
 #-------------------------------------------------------------------------------
-
-formatData = function(lst, normalization, feat) {
-  lst = lapply(lst, function(el)     
-      if(is.list(el)) {
-        #check if it is a list
-        if ("curation" %in% names(el)) {   
-          getDataset(el[["dataset"]], el[["platform"]], features = feat, norm = normalization, curation = el[["curation"]] );
-        } else {
-          getDataset(el[["dataset"]], el[["platform"]], features = feat, norm = normalization);
-        }
-      #} else if (is.character(el)) {      
-      #  should be a string identifying a measurement
-      #  getMeasurement(el, features = feat, norm = normalization);
-      } else { 
-        # it should be an expression set
-        el;
-      });
-}
-
-#--------------------------------------------------------------------------------
-
-
-
 
