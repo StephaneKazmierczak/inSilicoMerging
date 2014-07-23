@@ -123,8 +123,8 @@ combineByTwo:
 
 <<example_1>>=
 library(inSilicoDb)
-eset1 = getDataset("GSE19804", "GPL570", norm="FRMA", features = "gene");
-eset2 = getDataset("GSE10072", "GPL96",  norm="FRMA", features = "gene");
+eset1 = getDataset("GSE19804", "GPL570", norm="FRMA", features = "gene", curation = 17470);
+eset2 = getDataset("GSE10072", "GPL96",  norm="FRMA", features = "gene", curation = 17469);
 esets = list(eset1,eset2);
 @
 

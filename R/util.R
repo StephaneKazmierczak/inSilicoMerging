@@ -54,4 +54,12 @@ identify_common_genes = function(lst)
 }
 
 #-------------------------------------------------------------------------------
+matchExprsPheno = function(eset) {
+	#make sure the samples are ordered in the same way
+	sampleNames = colnames(exprs(eset));  
+	pData(eset) = pData(eset)[sampleNames, , drop = FALSE];
+	return(eset);
+}
+
+#-------------------------------------------------------------------------------
 

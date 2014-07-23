@@ -75,11 +75,6 @@ mergeNONE = function(esets)
 		
 	}
 	
-	#make sure the samples are ordered in the same way
-	measNames = sort(colnames(exprs(eset1)));  
-	exprs(eset1) = exprs(eset1)[, measNames, drop = FALSE];
-	pData(eset1) = pData(eset1)[measNames, , drop = FALSE];
-	
 	annotation(eset1) = unique(annot1);
 	return(eset1);
 }
