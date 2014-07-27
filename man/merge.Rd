@@ -44,7 +44,7 @@ esets = list(eset1,eset2);
 # merge them using different methods:
 library(inSilicoMerging);
 eset_FRMA = merge(esets);
-eset_BMC = merge(esets, method="BMC");
+eset_COMBAT = merge(esets, method="COMBAT");
 
 }
 
