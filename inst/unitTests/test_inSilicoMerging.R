@@ -4,8 +4,8 @@ library (inSilicoDb)
 # a very simple-minded test:  are the means of the null merge expression set different from the bmc merge?
 test.compare_null_bmc_merge = function ()
 {
-  eset1 = getDataset("GSE19804", "GPL570", norm="FRMA", features = "gene"); 
-  eset2 = getDataset("GSE10072", "GPL96", norm="FRMA", features = "gene"); 
+  eset1 = getDataset("GSE18842", "GPL570", norm="FRMA", features = "gene"); 
+  eset2 = getDataset("GSE31547", "GPL96", norm="FRMA", features = "gene"); 
   esets = list(eset1,eset2);
   eset_merged_null = merge(esets);
 
@@ -13,7 +13,7 @@ test.compare_null_bmc_merge = function ()
      ##    checkEquals (as.integer (nrow (eset_merged_null)), 12718);
 
   checkEquals (as.integer (nrow (eset_merged_null)), 12701); #12701
-  checkEquals (as.integer (ncol (eset_merged_null)), 227);
+  checkEquals (as.integer (ncol (eset_merged_null)), 141);
 
   expectedColumnCount = as.integer (ncol (eset1)) + as.integer (ncol (eset2))
   actualColumnCount = as.integer (ncol (eset_merged_null))

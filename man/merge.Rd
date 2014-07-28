@@ -37,8 +37,8 @@ Note that after using any of those methods the resulting merged dataset only con
 
 # retrieve two datasets:
 library(inSilicoDb);
-eset1 = getDataset("GSE19804", "GPL570", norm="FRMA", features="GENE");
-eset2 = getDataset("GSE10072", "GPL96",  norm="FRMA", features="GENE");
+eset1 = getDataset("GSE18842", "GPL570", norm="FRMA", features="GENE");
+eset2 = getDataset("GSE31547", "GPL96",  norm="FRMA", features="GENE");
 esets = list(eset1,eset2);
 
 # merge them using different methods:
