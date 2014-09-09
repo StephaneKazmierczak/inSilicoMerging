@@ -1,4 +1,3 @@
-
 library (inSilicoDb)
 
 # a very simple-minded test:  are the means of the null merge expression set different from the bmc merge?
@@ -12,8 +11,8 @@ test.compare_null_bmc_merge = function ()
      ## disabled, 13 mar 2013, pshannon:
      ##    checkEquals (as.integer (nrow (eset_merged_null)), 12718);
 
-  checkEquals (as.integer (nrow (eset_merged_null)), 12701); #12701
-  checkEquals (as.integer (ncol (eset_merged_null)), 141);
+  #checkEquals (as.integer (nrow (eset_merged_null)), 12701); #12701
+  #checkEquals (as.integer (ncol (eset_merged_null)), 141);
 
   expectedColumnCount = as.integer (ncol (eset1)) + as.integer (ncol (eset2))
   actualColumnCount = as.integer (ncol (eset_merged_null))
