@@ -7,7 +7,7 @@ msg = function(...) { message(paste("  INSILICOMERGING:",...)); }
 war = function(...) { msg(" ! WARNING ! ",...); }
 
 #-------------------------------------------------------------------------------
-MERGING_METHODS = c("BMC", "COMBAT", "DWD", "GENENORM", "XPN");
+MERGING_METHODS = c("BMC", "COMBAT", "DWD", "NONE", "GENENORM", "XPN");
 
 #-------------------------------------------------------------------------------
 isOdd = function(x) { as.logical(x%%2) };

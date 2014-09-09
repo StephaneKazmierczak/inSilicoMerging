@@ -1,20 +1,38 @@
 #-------------------------------------------------------------------------------
-merge = function(esets, method=NA)
+merge = function(esets, method= "NONE")
 {
 	
-	if(!is.na(method) && !is.element(method, MERGING_METHODS))
+	if(!is.element(method, MERGING_METHODS))
 	{
 		err("Merging Method: ",method," is not supported.");
 	}
 	
-	if(is.na(method)) {
+	
+	if(method == "NONE") {
 		msg("Run with no additional merging technique...");
-		return(matchExprsPheno(mergeNONE(esets)));
+		mergedEset = mergeNONE(esets);
+	} 	else if(method=="BMC") 
+	{ 
+		msg("Run BMC...");
+		mergedEset = mergeBMC(esets);      
+	} else if(method=="COMBAT")   
+	{ 
+		msg("Run COMBAT...");
+		mergedEset = mergeCOMBAT(esets);
+	} else if(method=="DWD")
+	{ 
+		msg("Run DWD...");
+		mergedEset = mergeDWD(esets);
+	} else if(method=="GENENORM")
+	{ 	
+		msg("Run GENENORM..."); 
+		mergedEset = mergeGENENORM(esets); 
+	} else if(method=="XPN")
+	{ 
+		msg("Run XPN...");
+		mergedEset = mergeXPN(esets);
 	}
-	if(method=="BMC")      { msg("Run BMC...");      return(matchExprsPheno(mergeBMC(esets)));      }
-	if(method=="COMBAT")   { msg("Run COMBAT...");   return(matchExprsPheno(mergeCOMBAT(esets)));   }
-	if(method=="DWD")      { msg("Run DWD...");      return(matchExprsPheno(mergeDWD(esets)));      }
-	if(method=="GENENORM") { msg("Run GENENORM..."); return(matchExprsPheno(mergeGENENORM(esets))); }
-	if(method=="XPN")      { msg("Run XPN...");      return(matchExprsPheno(mergeXPN(esets)));      }
+	
+	return(matchExprsPheno(mergedEset));
 	
 }
