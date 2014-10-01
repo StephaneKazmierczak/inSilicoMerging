@@ -19,10 +19,6 @@ merge = function(esets, method= "NONE")
 	{ 
 		msg("Run COMBAT...");
 		mergedEset = mergeCOMBAT(esets);
-	} else if(method=="DWD")
-	{ 
-		msg("Run DWD...");
-		mergedEset = mergeDWD(esets);
 	} else if(method=="GENENORM")
 	{ 	
 		msg("Run GENENORM..."); 

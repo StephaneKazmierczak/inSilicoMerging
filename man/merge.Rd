@@ -11,7 +11,7 @@ merge(esets, method='NONE');
 
 \arguments{
 \item{esets}{List of ExpressionSet objects.}
-\item{method}{Merging method aimed at removing inter-study bias. Possible options are: BMC, COMBAT, DWD, GENENORM and XPN. If none are specified, the merging  More information about each method is given below in the details.}
+\item{method}{Merging method aimed at removing inter-study bias. Possible options are: BMC, COMBAT, GENENORM and XPN. If none are specified, the merging  More information about each method is given below in the details.}
 }
 
 \value{
@@ -24,7 +24,6 @@ Currently the following different merging techniques are provided:
 \describe{
   \item{'BMC':}{In [1] they successfully applied a technique similar to z-score normalization for merging breast cancer datasets. They transformed the data by batch mean-centering, which means that the mean is subtracted.}
   \item{'COMBAT':}{Empirical Bayes [2] (also called EJLR or COMBAT) is a method that estimates the parameters of a model for mean and variance for each gene and then adjusts the genes in each batch to meet the assumed model. The parameters are estimated by pooling information from multiple genes in each batch.}
-  \item{'DWD':}{In [3] they propose to use Distance Weighted Discrimination to find the hyperplane that separates the expression values of two studies. Assuming that the variation due to studies originating from different labs is bigger than any biological variation present in the data a translation in the direction of the normal vector of the hyperplane is used to remove bias.}
   \item{'GENENORM':}{One of the simplest mathematical transformations to make datasets more comparable is z-score normalization. In this method, for each gene expression value in each study separately all values are altered by subtracting the mean of the gene in that dataset divided by its standard deviation.}
   \item{'NONE':}{Combine esets without any additional transformation. Similar to 'combine' function.}
   \item{'XPN':}{The basic idea behind the cross-platform normalization [4] approach is to find blocks (clusters) of genes and samples in both studies that have similar expression characteristics. In XPN, a gene measurement can be considered as a scaled and shifted block mean.}

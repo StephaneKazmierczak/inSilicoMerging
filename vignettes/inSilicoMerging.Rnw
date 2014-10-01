@@ -30,7 +30,9 @@ Using the inSilicoMerging package is straightforward since it mainly involves on
 \end{verbatim}
 
 \noindent with \texttt{esets} a list of ExpressionSet objects and
-\texttt{method} one of the following options: \texttt{BMC}, \texttt{COMBAT}, \texttt{DWD}, \texttt{GENENORM} and \texttt{XPN}. Each of those methods is already extensively reported in literature but is nevertheless briefly explained in the following section.\\
+\texttt{method} one of the following options: \texttt{BMC}, \texttt{COMBAT}, \texttt{GENENORM} and \texttt{XPN}. Each of those methods is already extensively reported in literature but is nevertheless briefly explained in the following section.\\
+%\texttt{method} one of the following options: \texttt{BMC}, \texttt{COMBAT},
+% \texttt{DWD}, \texttt{GENENORM} and \texttt{XPN}. Each of those methods is already extensively reported in literature but is nevertheless briefly explained in the following section.\\
 
 \noindent In order to visually inspect a merged dataset to have some direct feedback on its effect, three different visual validation methods are provided:
 
@@ -60,11 +62,12 @@ x_{ij}^k = \alpha_i + \mathbf{C}\beta_i + \gamma_i^k+\delta_i^k\epsilon_{ij}^k
 \end{equation}
 where $\alpha_i$ is the overall gene expression, $\mathbf{C}$ is a design matrix for sample conditions, $\beta_i$ is the vector of regression coefficients corresponding to $\mathbf{X}$,  $\gamma_i^k$ and $\delta_i^k$ are the additive and multiplicative batch effects for gene $i$ in batch $k$ respectively and $\epsilon_{ij}^k$ are error terms.
 
-\subsubsection*{DWD}
-By searching for the separating hyperplane between data coming from different batches, Distance-weighted discrimination (DWD), an adaptation of Support Vector Machines (SVM), allows to remove bias by projecting the different batches on the hyperplane, calculating the batch mean $\overline{b}$ distance to the hyperplane and then subtracting the normal vector $\Delta$ of this plane multiplied by the mean \cite{DWD}.
-\begin{equation}
-\hat{x}_{ij}^k = x_{ij}^k - \overline{b}\Delta
-\end{equation}
+%\subsubsection*{DWD}
+%By searching for the separating hyperplane between data coming from different
+% batches, Distance-weighted discrimination (DWD), an adaptation of Support Vector Machines (SVM), allows to remove bias by projecting the different batches on the hyperplane, calculating the batch mean $\overline{b}$ distance to the hyperplane and then subtracting the normal vector $\Delta$ of this plane multiplied by the mean \cite{DWD}.
+%\begin{equation}
+%\hat{x}_{ij}^k = x_{ij}^k - \overline{b}\Delta
+%\end{equation}
 
 \subsubsection*{GENENORM}
 One of the simplest mathematical transformations to make datasets more comparable is z-score normalization. In this method, for each gene expression value $x_{ij}$ in each study separately all values are modified by subtracting the mean $\overline{x}_{i}$ of the gene in that dataset divided by its standard deviation $\sigma_i$:
@@ -105,7 +108,7 @@ More details can be found in \cite{XPN}.
 
 \subsection{Merging two-by-two}
 
-\noindent  Some merging technique are only reported and implemented to merge exactly two studies (e.g. \texttt{XPN} \cite{XPN} and \texttt{DWD} \cite{DWD}). In order to be able to merge any number of studies, this package added an additional step. This step combines all studies two-by-two and is called recursively on the intermediate results until only one, merged, dataset remains. Its behavior is illustrated in the following example:
+\noindent  Some merging technique are only reported and implemented to merge exactly two studies (e.g. \texttt{XPN} \cite{XPN}). In order to be able to merge any number of studies, this package added an additional step. This step combines all studies two-by-two and is called recursively on the intermediate results until only one, merged, dataset remains. Its behavior is illustrated in the following example:
 
 \begin{verbatim}
 list of studies = [ A ; B ; C ; D ; E ]
@@ -190,7 +193,6 @@ cat("\\begin{center}\\includegraphics[width=\\textwidth]{", ofile, "}\\end{cente
 <<example_7a, eval=FALSE>>=
 gene = "CA4";
 eset_BMC = merge(esets, method="BMC");
-eset_DWD = merge(esets, method="DWD");
 par(mfrow=c(2,2));
 plotGeneWiseBoxPlot(eset_FRMA, colLabel="Disease", batchLabel="Study", 
                     gene=gene, legend=TRUE, main="FRMA");
@@ -198,8 +200,6 @@ plotGeneWiseBoxPlot(eset_COMBAT, colLabel="Disease", batchLabel="Study",
                     gene=gene, legend=FALSE, main="COMBAT");
 plotGeneWiseBoxPlot(eset_BMC, colLabel="Disease", batchLabel="Study", 
                     gene=gene, legend=FALSE, main="BMC");
-plotGeneWiseBoxPlot(eset_DWD, colLabel="Disease", batchLabel="Study", 
-                    gene=gene, legend=FALSE, main="DWD");
 @
 
 <<example_7b, results=tex, echo=FALSE>>=
@@ -208,7 +208,6 @@ pdf(file=ofile, paper="special", width=8, height=6);
 
 gene = "CA4";
 eset_BMC = merge(esets, method="BMC");
-eset_DWD = merge(esets, method="DWD");
 par(mfrow=c(2,2));
 plotGeneWiseBoxPlot(eset_FRMA, colLabel="Disease", batchLabel="Study", 
                                           gene=gene, legend=TRUE, main="FRMA");
@@ -216,8 +215,6 @@ plotGeneWiseBoxPlot(eset_COMBAT, colLabel="Disease", batchLabel="Study",
                                           gene=gene, legend=FALSE, main="COMBAT");
 plotGeneWiseBoxPlot(eset_BMC, colLabel="Disease", batchLabel="Study", 
                                            gene=gene, legend=FALSE, main="BMC");
-plotGeneWiseBoxPlot(eset_DWD, colLabel="Disease", batchLabel="Study", 
-                                          gene=gene, legend=FALSE, main="DWD");
 
 for(i in 1:1) { dev.off(); }
 cat("\\begin{center}\\includegraphics[width=\\textwidth]{", ofile, "}\\end{center}\n\n", sep="");
@@ -236,8 +233,6 @@ plotGeneWiseBoxPlot(eset_COMBAT, colLabel="Disease", batchLabel="Study",
                     gene=gene, legend=FALSE, main="COMBAT");
 plotGeneWiseBoxPlot(eset_BMC, colLabel="Disease", batchLabel="Study", 
                     gene=gene, legend=FALSE, main="BMC");
-plotGeneWiseBoxPlot(eset_DWD, colLabel="Disease", batchLabel="Study", 
-                    gene=gene, legend=FALSE, main="DWD");
 @
 
 <<example_8b, results=tex, echo=FALSE>>=
@@ -252,8 +247,6 @@ plotGeneWiseBoxPlot(eset_COMBAT, colLabel="Disease", batchLabel="Study",
                                           gene=gene, legend=FALSE, main="COMBAT");
 plotGeneWiseBoxPlot(eset_BMC, colLabel="Disease", batchLabel="Study", 
                                            gene=gene, legend=FALSE, main="BMC");
-plotGeneWiseBoxPlot(eset_DWD, colLabel="Disease", batchLabel="Study", 
-                                          gene=gene, legend=FALSE, main="DWD");
 
 for(i in 1:1) { dev.off(); }
 cat("\\begin{center}\\includegraphics[width=\\textwidth]{", ofile, "}\\end{center}\n\n", sep="");

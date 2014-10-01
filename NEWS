@@ -34,4 +34,7 @@ BUG FIXES
 	
 	o Bug fix in version 1.8.0 introduced distortions in the results of some of the methods. This should be solved in this version.
 
-	
+CHANGES IN VERSION 1.10.0
+-------------------------
+
+	o Method DWD removed because the DWD package has been archived by CRAN
