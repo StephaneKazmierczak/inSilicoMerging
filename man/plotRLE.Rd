@@ -19,6 +19,7 @@ plotRLE(eset, colLabel, legend=TRUE, file=NULL, ...)
 
 # retrieve two datasets:
 library(inSilicoDb);
+InSilicoLogin("rpackage_tester@insilicodb.com", "5c4d0b231e5cba4a0bc54783b385cc9a");
 eset1 = getDataset("GSE18842", "GPL570", norm="FRMA", features="gene");
 eset2 = getDataset("GSE31547", "GPL96",  norm="FRMA", features="gene");
 esets = list(eset1,eset2);
