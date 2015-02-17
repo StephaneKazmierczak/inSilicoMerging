@@ -36,6 +36,7 @@ Note that after using any of those methods the resulting merged dataset only con
 
 # retrieve two datasets:
 library(inSilicoDb);
+InSilicoLogin("rpackage_tester@insilicodb.com", "5c4d0b231e5cba4a0bc54783b385cc9a");
 eset1 = getDataset("GSE18842", "GPL570", norm="FRMA", features="GENE");
 eset2 = getDataset("GSE31547", "GPL96",  norm="FRMA", features="GENE");
 esets = list(eset1,eset2);
