@@ -1,0 +1,40 @@
+CHANGES IN VERSION 1.8.0
+-------------------------
+
+NEW FEATURES
+
+    o Possibility to use named lists instead of eSets, check the merge-method documentation for an example
+
+BUG FIXES
+
+	o Measurements are now always sorted in the same order in phenoData and exprs
+
+OTHER
+
+    o Previous "NONE" method only available when not specifying a batch effect removal method or by specifying NULL.
+    
+CHANGES IN VERSION 1.8.3
+-------------------------
+
+REMOVED FEATURES
+	
+	o Removed the possibility to use named lists instead of eSets.
+	
+CHANGES IN VERSION 1.8.4
+-------------------------
+
+DOCUMENTATION
+
+	o Changes in the documentation
+	
+CHANGES IN VERSION 1.8.5
+-------------------------
+
+BUG FIXES
+	
+	o Bug fix in version 1.8.0 introduced distortions in the results of some of the methods. This should be solved in this version.
+
+CHANGES IN VERSION 1.10.0
+-------------------------
+
+	o Method DWD removed because the DWD package has been archived by CRAN

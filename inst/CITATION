@@ -1,0 +1,17 @@
+citHeader("To cite inSilicoMerging in publications use:")
+
+
+citEntry(entry="article",
+  title  =" Unlocking the potential of publicly available microarray data using inSilicoDb and inSilicoMerging R/Bioconductor packages",
+  author = "J Taminau, S Meganck, C Lazar, D Steenhoff, A Coletta, C Molter, R Duque, V de Schaetzen, D Y Weiss Solis, H Bersini and A Nowe",
+  journal = "BMC Bioinformatics",
+  year = "2012",
+  volume = "13",
+  pages = "355.",
+  textVersion = paste("J Taminau, S Meganck, C Lazar, D Steenhoff, A Coletta, C Molter, R Duque, V de Schaetzen, D Y Weiss Solis, H Bersini and A Nowe",
+    "Unlocking the potential of publicly available microarray data using inSilicoDb and inSilicoMerging R/Bioconductor packages",
+    "BMC Bioinformatics 35: 355. (2012)."))
+
+
+citFooter("We have invested our time and effort in creating inSilicoMerging,",
+          "we would be grateful if you could cite it when using it.")
