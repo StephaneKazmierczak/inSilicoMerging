@@ -75,6 +75,9 @@ mergeCOMBAT = function(esets)
 	print(paste("dim bayesdata :",dim(bayesdata)))
 	print(paste("dim exprs(eset) :",dim(exprs(raw_merged))))
 	
+	print(paste("colnames bayesdata :",colnames(bayesdata)))
+	print(paste("colnames exprs(eset) :",colnames(raw_merged)))
+	
 	eset=raw_merged
 	exprs(eset)=bayesdata
 	return(eset)	
