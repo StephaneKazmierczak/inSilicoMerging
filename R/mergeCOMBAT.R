@@ -6,8 +6,6 @@
 mergeCOMBAT = function(esets)
 {
 	raw_merged = mergeNONE(esets)
-  print(paste("rownames pData eset",rownames(pData(raw_merged))))	
-	print(paste("colnames exprs(eset) :",colnames(exprs(raw_merged))))
 	
   batchInfo = NULL;
   for(i in 1:length(esets))
@@ -72,22 +70,6 @@ mergeCOMBAT = function(esets)
 	}
 	
 	bayesdata <- (bayesdata*(sqrt(var.pooled)%*%t(rep(1,n.array))))+stand.mean
-  
-	print("Debug Combat")
-	print(paste("dim bayesdata :",dim(bayesdata)))
-	print(paste("dim exprs(eset) :",dim(exprs(raw_merged))))
-	
-	print(paste("colnames bayesdata :",colnames(bayesdata)))
-	print(paste("colnames exprs(eset) :",colnames(exprs(raw_merged))))
-	print(paste("setdiff colnames", setdiff(colnames(bayesdata),
-	                                        colnames(exprs(raw_merged))
-	                                        )))	
-	
-	print(paste("setdiff rownames", setdiff(rownames(bayesdata),
-	                                        rownames(exprs(raw_merged))
-	                                        )))	
-	
-	
 	
 	eset=raw_merged
 	exprs(eset)=bayesdata
