@@ -70,7 +70,11 @@ mergeCOMBAT = function(esets)
 	}
 	
 	bayesdata <- (bayesdata*(sqrt(var.pooled)%*%t(rep(1,n.array))))+stand.mean
-
+  
+	print("Debug Combat")
+	print(paste("dim bayesdata :",dim(bayesdata)))
+	print(paste("dim exprs(eset) :",dim(exprs(raw_merged))))
+	
 	eset=raw_merged
 	exprs(eset)=bayesdata
 	return(eset)	
