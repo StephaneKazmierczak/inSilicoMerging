@@ -79,6 +79,15 @@ mergeCOMBAT = function(esets)
 	
 	print(paste("colnames bayesdata :",colnames(bayesdata)))
 	print(paste("colnames exprs(eset) :",colnames(exprs(raw_merged))))
+	print(paste("setdiff colnames", setdiff(colnames(bayesdata),
+	                                        colnames(exprs(raw_merged))
+	                                        )))	
+	
+	print(paste("setdiff rownames", setdiff(rownames(bayesdata),
+	                                        rownames(exprs(raw_merged))
+	                                        )))	
+	
+	
 	
 	eset=raw_merged
 	exprs(eset)=bayesdata
