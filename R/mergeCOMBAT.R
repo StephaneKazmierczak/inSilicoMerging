@@ -6,7 +6,9 @@
 mergeCOMBAT = function(esets)
 {
 	raw_merged = mergeNONE(esets)
-
+  print(paste("rownames pData eset",rownames(pData(eset))))	
+	print(paste("colnames exprs(eset) :",colnames(exprs(raw_merged))))
+	
   batchInfo = NULL;
   for(i in 1:length(esets))
   {
@@ -62,7 +64,7 @@ mergeCOMBAT = function(esets)
 	
 	### Normalize the Data ###
 	bayesdata <- s.data
-	j <- 1
+	j <- 1 
 	for (i in batches)
 	{
 		bayesdata[,i] <- (bayesdata[,i]-t(batch.design[i,]%*%gamma.star))/(sqrt(delta.star[j,])%*%t(rep(1,n.batches[j])))
