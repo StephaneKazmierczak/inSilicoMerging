@@ -65,8 +65,9 @@ mergeNONE = function(esets)
 		d1 = d1[cg, , drop = FALSE];
 		d2 = d2[cg, , drop = FALSE];
 		
-		eset1 = new("ExpressionSet");    
-		exprs(eset1) = cbind(d1, d2);
+		# eset1 = new("ExpressionSet");    
+		# exprs(eset1) = cbind(d1, d2);
+		eset1 <- ExpressionSet(assayData = cbind(d1,d2))
 		pData(eset1) = pData;
 		fData(eset1) = fData;
 		
