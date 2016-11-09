@@ -6,7 +6,7 @@
 mergeCOMBAT = function(esets)
 {
 	raw_merged = mergeNONE(esets)
-  print(paste("rownames pData eset",rownames(pData(eset))))	
+  print(paste("rownames pData eset",rownames(pData(raw_merged))))	
 	print(paste("colnames exprs(eset) :",colnames(exprs(raw_merged))))
 	
   batchInfo = NULL;
