@@ -1,5 +1,4 @@
 export(merge);
-export(mergeNONE)
 export(plotMDS);
 export(plotRLE);
 export(plotGeneWiseBoxPlot);
